@@ -112,7 +112,7 @@ prusa-connect pause "Core One" --yes
   of 2026, and it was not verified here before the first real login.
 - **The code expires fast** (Django OAuth Toolkit's default is 60 s; Prusa's setting is not
   known). Relaying the pasted URL through a chat can be too slow; then run `login --start` again.
-  Our own pending login is kept for 15 minutes.
+  Our side of a `--start` login stays valid for 6 hours (the verifier is useless without a fresh code), so only the step from signing in to pasting is time-critical.
 - **Undocumented API.** Field names (`connect_state`, `job_info.time_remaining`, ...) were taken
   from PrusaSlicer source and community clients. A rename shows up as missing values or a clear
   "API changed" error, not a silent wrong action.

@@ -41,7 +41,7 @@ AUTHORIZE_URL = f"{ACCOUNT_URL}/o/authorize/"
 # unfinished login stays redeemable on our side (the server's own code
 # lifetime is unknown and probably shorter; see README Limitations).
 REFRESH_LEEWAY_S = 120
-PENDING_TTL_S = 15 * 60
+PENDING_TTL_S = 6 * 3600
 
 
 @dataclass(frozen=True)
