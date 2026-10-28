@@ -11,7 +11,10 @@ browser automation or PrusaSlicer needed on the machine running it. Standard lib
   `/o/token/`). Prusa publishes no third-party client, so `login` uses the public client of the
   Connect web app (`ACCOUNT_CLIENT_ID` in `https://connect.prusa3d.com/environment.js`) with
   PKCE S256. Its redirect is an ordinary https page, so after signing in the code is in the
-  browser's address bar on any phone or laptop; you paste it back. `--client slicer` uses
+  browser's URL; you paste it back. In practice Connect's callback page moves straight on to
+  the dashboard, so take the `.../login/auth-callback?code=...` address from the browser
+  history, quickly: on 2026-10-28 a code read back from history right afterwards still worked.
+  `--client slicer` uses
   PrusaSlicer's client instead (`m_account_client_id` in PrusaSlicer's `ServiceConfig.cpp`,
   also in the 2.9.6 binary), whose `prusaslicer://login?code=` redirect is only visible in
   browser developer tools. It is there as a fallback.
@@ -107,9 +110,13 @@ prusa-connect pause "Core One" --yes
 ## Limitations
 
 - **Borrowed OAuth client.** Both client ids belong to Prusa's own apps. If Prusa restricts them,
-  login breaks until the tool is updated. The default flow depends on Connect's callback page
-  leaving a code alone when it did not issue the `state`; that is how it behaved for prusactl as
-  of 2026, and it was not verified here before the first real login.
+  login breaks until the tool is updated.
+- **The callback page moves on.** Connect's auth-callback page redirects to the dashboard, so
+  the code is usually gone from the address bar by the time you look. If the page moves on,
+  take the auth-callback address from history, quickly. Verified on 2026-10-28: the code
+  copied from history straight after the redirect was accepted by `login --finish`. Connect's
+  page evidently does not redeem a code whose `state` it did not issue; if Prusa changes that,
+  the token exchange fails with `invalid_grant` and the login has to be redone.
 - **The code expires fast** (Django OAuth Toolkit's default is 60 s; Prusa's setting is not
   known). Relaying the pasted URL through a chat can be too slow; then run `login --start` again.
   Our side of a `--start` login stays valid for 6 hours (the verifier is useless without a fresh code), so only the step from signing in to pasting is time-critical.

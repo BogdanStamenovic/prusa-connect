@@ -39,12 +39,12 @@ Sign in to Prusa Account (one time; the tool refreshes the login by itself after
 
      {url}
 
-  2. When it finishes you land on a connect.prusa3d.com page. Copy the full
-     address from the address bar: it contains "code=". If the page already
-     moved on, find the ".../login/auth-callback?code=..." entry in the
-     browser history.
-  3. Paste it here (just the code also works) and press Enter. Do it within a
-     minute or two: the code expires quickly.
+  2. After signing in, the browser briefly visits
+     https://connect.prusa3d.com/login/auth-callback?code=...&state=...
+     and then moves on to the Connect dashboard. Open the browser history
+     and copy that auth-callback address (it contains "code=").
+  3. Paste it here (just the code also works) and press Enter. Be quick:
+     the code expires within a minute or so.
 """
 
 
@@ -364,7 +364,8 @@ def _login(args: argparse.Namespace, tx: Transport, log: Any) -> int:
     url = auth.start_login(auth.CLIENTS[args.client])
     if args.start:
         sys.stdout.write(url + "\n")
-        log("Open that URL, sign in, then run: prusa-connect login --finish '<address you landed on>'")
+        log("Open that URL and sign in. The page moves on to the dashboard: copy the auth-callback?code=... "
+            "address from browser history, quickly, then run: prusa-connect login --finish '<that address>'")
         return 0
     print(LOGIN_HELP.format(url=url), file=sys.stderr)
     if args.client == "slicer":
