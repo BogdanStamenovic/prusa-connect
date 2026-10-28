@@ -272,7 +272,8 @@ def login_info(now: float | None = None) -> dict[str, Any]:
     return {
         "logged_in": bool(tokens.get("refresh_token") or exp > now),
         "client": client,
-        "access_expires_in_s": int(exp - now),
+        "access_expires_in_s": max(0, int(exp - now)),
+        "access_expired": exp <= now,
         "has_refresh_token": bool(tokens.get("refresh_token")),
         "token_file": str(store.token_path()),
     }
