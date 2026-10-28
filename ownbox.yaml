@@ -1,0 +1,17 @@
+schema: 1
+name: prusa-connect
+description: Headless command-line client for Prusa Connect - printer status, files, history, and guarded print control.
+homepage: https://github.com/BogdanStamenovic/prusa-connect
+tags: [cli, prusa, 3d-printing, python]
+
+# The scripts in deploy/ do the whole lifecycle so a manual
+# `bash deploy/setup.sh` and `ownbox install` are the same path.
+# The login (tokens.json) lives in ~/.config/prusa-connect, outside the
+# checkout, so update and rollback cannot lose it; remove asks before
+# deleting it and keeps it when there is no terminal to ask on.
+install:
+  platforms: [linux, darwin]
+  setup: [bash deploy/setup.sh]
+  update: [bash deploy/update.sh]
+  remove: [bash deploy/remove.sh]
+command: .venv/bin/prusa-connect
